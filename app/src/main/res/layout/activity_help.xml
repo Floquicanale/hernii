@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".HelpActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        >
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/button_color"
+            android:background="@color/button_color"
+            app:title="¿Como me mido la presión?"
+            app:toolbarId="@id/toolbar"
+            app:expandedTitleTextColor="@color/white"
+            app:collapsedTitleTextColor="@color/white"
+            >
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|end"
+                android:paddingBottom="25dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/logo_h"
+                app:layout_collapseMode="parallax" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/calibrar1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/ayuda1"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="Paso 1: Encender Bluetooth"
+                android:textSize="25sp"
+                android:fontFamily="@font/labtsw_"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/ayuda1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calibrar1"
+                app:layout_constraintBottom_toTopOf="@id/medir_presion2"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="@string/ayuda1"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/medir_presion2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ayuda1"
+                app:layout_constraintBottom_toTopOf="@id/ayuda2a"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="Paso 2: Colocación de Sensores"
+                android:paddingTop="20dp"
+                android:textSize="22sp"
+                android:fontFamily="@font/labtsw_"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/ayuda2a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/medir_presion2"
+                app:layout_constraintBottom_toTopOf="@id/sensores_pic"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="@string/ayuda2a"
+                android:textSize="15sp"
+                />
+
+            <ImageView
+                android:id="@+id/sensores_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ayuda2a"
+                app:layout_constraintBottom_toTopOf="@id/ayuda2b"
+                android:src="@drawable/sensores" />
+
+            <TextView
+                android:id="@+id/ayuda2b"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sensores_pic"
+                app:layout_constraintBottom_toTopOf="@id/calibrarlo"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="@string/ayuda2b"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/calibrarlo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ayuda2b"
+                app:layout_constraintBottom_toTopOf="@id/ayuda3"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="Paso 3: Calibrar HHERNII"
+                android:paddingTop="20dp"
+                android:textSize="25sp"
+                android:fontFamily="@font/labtsw_"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/ayuda3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calibrarlo"
+                app:layout_constraintBottom_toTopOf="@id/medir"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="@string/ayuda3"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/medir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ayuda3"
+                app:layout_constraintBottom_toTopOf="@id/ayuda4"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="Paso 4: Medir Presión"
+                android:paddingTop="20dp"
+                android:textSize="25sp"
+                android:fontFamily="@font/labtsw_"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/ayuda4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ver_valores"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="@string/ayuda4"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/ver_valores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ayuda4"
+                app:layout_constraintBottom_toTopOf="@id/ayuda5"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="Paso 5: Ver presión"
+                android:paddingTop="20dp"
+                android:textSize="25sp"
+                android:fontFamily="@font/labtsw_"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/ayuda5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ver_valores"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"
+                android:text="@string/ayuda5"
+                android:textSize="15sp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        
+
+

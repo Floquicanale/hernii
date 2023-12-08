@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">HHERNII</string>
+
+    <string name="boton_1">Conectar BT</string>
+    <string name="boton_2">Dispositivos</string>
+    <string name="boton_3">Desconectar BT</string>
+    <string name="boton_4">Medir Presión</string>
+    <string name="boton_5">Calibrar</string>
+    <string name="lista">Dispositivos apareados</string>
+    <string name="txt_1">Datos leidos</string>
+    <string name="boton_6">Editar Perfil</string>
+
+
+    <string name="email">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="confirmar_contrasena">Confirmar contraseña</string>
+    <string name="register">Registrarse</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="logout">Cerrar Sesión</string>
+
+    <string name="medicion1">P. Sistólica</string>
+    <string name="medicion2">P. Diastólica</string>
+    <string name="calibracion">Calibración</string>
+    <string name="save_cali">Guardar calibración</string>
+
+
+    <string name="medicion">Medición de Presión</string>
+
+
+    <string name="sistolica">Presión Sistólica</string>
+    <string name="diastolica">Presión Diastólica</string>
+
+    <string name="edad">Edad</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="username">Nombre de usuario</string>
+
+
+    <string name="save">Guardar</string>
+    <string name="choose_image">Editar imagen</string>
+
+    <string name="help">¿Cómo me mido?</string>
+    <string name="medir">Medir Presión</string>
+    <string name="historial">Historial de Mediciones</string>
+
+    <string name="ult_med">Última medición:</string>
+    <string name="crear_pdf">Exportar Informe</string>
+
+
+    <string name="ayuda1">
+        Primero tenés que encender el Bluetooth de tu celular. Una vez hayas hecho eso, presioná dentro del menú el botón de ´´Medir Presión.´´
+        \n\nAhora, tenés que conectar la aplicación al dispositivo. Para hacerlo, presioná en ´´Conectar BT.´´ Este botón te habilitará a medirte la presión. Si este botón fue preisonado, no podrás medirte la presión.
+    </string>
+
+    <string name="ayuda2a">
+        Estando sentado con la espalda recta tenés que colocarte los siguientes sensores: Electrocardiograma (ECG), acelerómetro (SCG) y fotopletismógrafo (PPG) acordes a lo que ves en la fotografía.
+        </string>
+    <string name="ayuda2b">
+        Para el ECG: un electrodo en el hombro derecho con el cable Rojo, un electrodo en el hombro izquierdo con el cable Amarillo y un electrodo con el cable verde sobre el lado izquierdo del abdomen.
+        \n\nPara el acelerómetro: utilizarás un trozo de cinta hipoalergénica para pegar el sensor sobre la parte inferior del esternón (el hueso del centro del pecho). Revisá que el sensor esté bien sobre el pecho, de ser necesario inclinate un poco hacia adelante.
+        \n\nPara el PPG: tenés que revisar que la luz roja esté encendida, y apoyar tu dedo sobre la luz, sin presionar con fuerza.
+        \n\nCon respecto al tensiómetro idealmente lo utilizará un médico. Pero, en caso de estar solx, colocate el brazalete 2 dedos por encima del pliege del codo y al cerrarlo te tiene que apretar el biceps sin pellizcarte la piel.
+    </string>
+
+    <string name="ayuda3">
+        Dentro de la pantalla de ´´Medir Presión´´ vas a poder calibrar el dispositivo para personalizarlo con tus valores. Recordá que tenés que calibrar a HHERNII una vez cada cierto tiempo, usualmente junto a tu médico.
+        \n\nPara la calibración tenés realizar el siguiente procedimiento:
+        \n\nMedición 1: En reposo, sentado en una silla, con la espalda zo iderecha y el brazalete en el brazquierdo a la altura del corazón. Con este protocolo, podrás medirte la presión y obtener los valores de presión sistólica y diastólica correctamente y cargarlos en el espacio previsto dentro de este apartado. Luego de hacer esto, asegurate de tener el Bluethooth prendido y de tener bien colocados los sensores del dispositivo HHERNII. Presioná el botón ´´Calibrar´´ en la misma línea y esperá a que finalice la medición.
+        \n\nAntes de la medición 2, realizá un ejercicio aeróbico para aumentar tu ritmo cardíaco. Como por ejemplo subir y bajar un piso de escaleras 5 veces, o correr a un ritmo elevado 300 metros.
+        \n\nMedición 2: Inmediatamente después del ejercicio, repetí el procedimiento de medición de la Medición 1, tanto con el tensiómetro, como con el dispositivo HHERNII.
+        \n\nMedición 3: Pasados 5 minutos del ejercicio, repetí el procedimiento de medición de la Medición 1, tanto con el tensiómetro, como con el dispositivo HHERNII.
+        \n\nLuego presionas ´´Guardar Calibración´´ y los datos serán guardados hasta la próxima vez que tengas que calibrarte.
+    </string>
+
+    <string name="ayuda4">
+        En el Menu principal tenés que presionar en ´´Medir Presión´´
+        \n\nPrimero, es OBLIGATORIO que presiones el botón ´´Conectar BT´´ en la pantalla. Cuando te indique que ya está todo listo, toma una posición cómoda, sentadx y tranquilx.
+        \n\nAsegurate de tener bien colocados todos los sensores de medicion.
+        \n\nEn este momento puedes presionar el botón ´´MEDIR PRESIÓN´´ y ya comenzará a medirte la presión.
+        \n\nEspera a que hayan terminado las mediciones para volver a moverte y continuar con tu rutina.
+    </string>
+
+    <string name="ayuda5">
+        Para observar tus resultados tenés que presionar el botón: ´´Historial de Mediciones´´, donde podrás ver todas tus mediciones de presión pasadas, mostradas por fecha.
+        \n\nSi necesitás exportar tus mediciones a un informe, simplemente tenés que presionar el botón de ´´Exportar Informe´´ y tus mediciones de presión, junto con tus datos, se exportarán para que las puedas enviar a cualquier persona que necesites.
+    </string>
+
+
+</resources>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/DBP_txt"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HistorialActivity">
+
+    <TextView
+        android:id="@+id/title_hist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/button_color"
+        android:fontFamily="@font/labtsw_"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Historial de Mediciones"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/vertical_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline9"/>
+
+    <LinearLayout
+        android:id="@+id/vertical_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center|top"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline3"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/title_hist"
+        >
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <TextView
+                        android:id="@+id/ult_med"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingTop="30dp"
+                        android:text="@string/ult_med"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:padding="15dp"
+                    android:background="@drawable/border2"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/SBP_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/labtsw_"
+                        android:paddingTop="10dp"
+                        android:text="SBP: "
+                        android:textColor="@color/button_color"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/SBP_last"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/labtsw_"
+                        android:layout_marginLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:text="-"
+                        android:textColor="@color/button_color"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                     />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/labtsw_"
+                        android:paddingTop="10dp"
+                        android:layout_marginLeft="25dp"
+                        android:text="DBP: "
+                        android:textColor="@color/button_color"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/DBP_last"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/labtsw_"
+                        android:paddingTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="-"
+                        android:textColor="@color/button_color"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal|vertical"
+                    android:scrollbarStyle="outsideInset"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    >
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="horizontal|vertical"
+                        android:layout_gravity="center">
+
+                        <TableLayout
+                            android:layout_marginTop="25dp"
+                            android:layout_marginBottom="25dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:stretchColumns="0"
+                            android:shrinkColumns="1,2,3">
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="10dp"
+                                >
+
+                                <TextView
+                                    android:text="Fecha"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginRight="10dp"
+                                    />
+
+                                <TextView
+                                    android:text="SBP"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginRight="10dp"
+                                    />
+
+                                <TextView
+                                    android:text="DBP"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginRight="10dp"
+
+                                    />
+                                <TextView
+                                    android:text="HR"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginRight="10dp"
+
+                                    />
+
+                            </TableRow>
+
+                            <TableRow
+                                android:gravity="center"
+                                android:layout_marginTop="10dp">
+
+                                <ListView
+                                    android:id="@+id/fecha_list"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="200dp"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center" />
+
+                                <ListView
+                                    android:id="@+id/sbp_list"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center" />
+
+                                <ListView
+                                    android:id="@+id/dbp_list"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center" />
+
+                                <ListView
+                                    android:id="@+id/hr_list"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center" />
+                            </TableRow>
+
+                        </TableLayout>
+
+                    </HorizontalScrollView>
+
+                </ScrollView>
+
+
+
+
+                <Button
+                    android:id="@+id/pdf_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/labtsw_"
+                    android:text="@string/crear_pdf"
+                    android:textColor="@color/background"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/button_color" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.66" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.41" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

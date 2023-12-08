@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "801918939786",
+    "project_id": "hherniiapp",
+    "storage_bucket": "hherniiapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801918939786:android:c87cff1ac30cac7af9f373",
+        "android_client_info": {
+          "package_name": "com.example.hherniiapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPk55xaM7nuaEu_8VUTpf1jrKeFZkAqYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
