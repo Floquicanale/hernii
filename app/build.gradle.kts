@@ -39,6 +39,7 @@ dependencies {
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-tasks:18.0.2")
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     implementation("com.google.firebase:firebase-database:20.2.2")
     implementation("com.google.firebase:firebase-storage:20.2.1")

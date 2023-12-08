@@ -1,11 +1,7 @@
 package com.example.hherniiapp;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
+import static java.security.AccessController.getContext;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,21 +14,24 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,13 +40,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,6 +47,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 
 public class HistorialActivity extends AppCompatActivity {
@@ -192,6 +190,10 @@ public class HistorialActivity extends AppCompatActivity {
                         dbp_array.add(childSnapshot.child("dbp").getValue().toString());
                         fecha_array.add(childSnapshot.getKey().toString());
                     }
+                    Collections.reverse(sbp_array);
+                    Collections.reverse(dbp_array);
+                    Collections.reverse(hr_array);
+                    Collections.reverse(fecha_array);
 
 
                     printPDF(username[0], name[0], surname[0], edad[0], email[0], hr_array, sbp_array, dbp_array, fecha_array);
@@ -240,49 +242,36 @@ public class HistorialActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    private void printPDF(String usuario, String nombre, String apellido, String edad, String email, ArrayList<String> HR_array, ArrayList<String> SBP_array, ArrayList<String> DBP_array, ArrayList<String> fecha_array) {
-        System.out.println("Estoy en el printPDF");
-        PdfDocument document = new PdfDocument();
-
-        int viewWidth = 1080;
-        int viewHeight = 1920;
-        int y;
-
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(viewWidth,viewHeight,1).create();
-        PdfDocument.Page page = document.startPage(pageInfo);
-
-        Canvas canvas = page.getCanvas();
-
-        Paint titulo = new Paint();
-        titulo.setColor(Color.BLACK);
-        titulo.setTextSize(41);
-
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(21);
-
-        canvas.drawText("Informe Médico de Presión", 300, 100 , titulo);
-        canvas.drawText("Usuario: "+usuario, 100, 150 , paint);
-        canvas.drawText("Paciente: "+nombre+" "+apellido, 100, 200 , paint);
-        canvas.drawText("Edad: "+edad, 100, 250 , paint);
-        canvas.drawText("Email: "+email, 100, 300 , paint);
-        canvas.drawLine(100, 350, 1000, 350, paint);
-
-        for (int i=0; i < HR_array.size();i++){
-            y = 400 + 50*i;
-            canvas.drawText("Fecha: "+fecha_array.get(i), 100, y , paint);
-            canvas.drawText("HR: "+HR_array.get(i), 500, y , paint);
-            canvas.drawText("SBP: "+SBP_array.get(i), 600, y , paint);
-            canvas.drawText("DBP: "+DBP_array.get(i), 700, y , paint);
+    private static double calcularPromedio(ArrayList<String> lista) {
+        if (lista.isEmpty()) {
+            return 0.0;  // Manejar el caso de una lista vacía para evitar división por cero
         }
 
-        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.hernii_landscape);
-        if (originalBitmap != null) {
-            // Dibujar una imagen en el canvas
-            int newWidth = 500; // ajusta según tus necesidades
-            int newHeight = 150;
+        double suma = 0.0;
+        for (String valor : lista) {
+            suma += Double.parseDouble(valor);
+        }
 
+        return suma / lista.size();
+    }
+
+    private Bitmap convertirChartABitmap(LineChart chart) {
+        chart.measure(View.MeasureSpec.makeMeasureSpec(chart.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(chart.getHeight(), View.MeasureSpec.EXACTLY));
+        chart.layout(0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight());
+
+        Bitmap bitmap = Bitmap.createBitmap(chart.getWidth(), chart.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        chart.draw(canvas);
+        return bitmap;
+    }
+
+    private void agregarlogo(Canvas canvas) {
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.hernii_landscape);
+        int newWidth = 500; // ajusta según tus necesidades
+        int newHeight = 150;
+        if (originalBitmap != null) {
             // Crear una matriz de transformación
             Matrix matrix = new Matrix();
 
@@ -301,9 +290,215 @@ public class HistorialActivity extends AppCompatActivity {
             // Manejar el caso en que la carga de la imagen falla
             Log.e("Error", "Error al cargar la imagen desde los recursos");
         }
+    }
 
+    private void printPDF(String usuario, String nombre, String apellido, String edad, String email, ArrayList<String> HR_array, ArrayList<String> SBP_array, ArrayList<String> DBP_array, ArrayList<String> fecha_array) {
+        System.out.println("Estoy en el printPDF");
+        PdfDocument document = new PdfDocument();
+
+        int viewWidth = 1080;
+        int viewHeight = 1920;
+        int y;
+
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(viewWidth,viewHeight,1).create();
+        PdfDocument.Page page = document.startPage(pageInfo);
+
+        Canvas canvas = page.getCanvas();
+        int currentPage = 1; // Contador de páginas
+
+        Paint titulo = new Paint();
+        titulo.setColor(Color.BLACK);
+        titulo.setTextSize(41);
+
+        Paint subtitulo = new Paint();
+        subtitulo.setColor(Color.BLACK);
+        subtitulo.setTextSize(30);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(21);
+
+        Paint pain = new Paint();
+        pain.setColor(Color.RED);
+        pain.setTextSize(21);
+
+        canvas.drawText("Informe Médico de Presión", 300, 100 , titulo);
+        canvas.drawText("Resumen del estudio", 400, 170 , subtitulo);
+        canvas.drawLine(100, 200, 1000, 200, paint);
+        canvas.drawText("Datos de Paciente:", 100, 250 , subtitulo);
+        canvas.drawText("Usuario: "+usuario, 100, 300 , paint);
+        canvas.drawText("DNI: No especificado", 500, 300 , paint);
+        canvas.drawText("Paciente: "+nombre+" "+apellido, 100, 350 , paint);
+        canvas.drawText("Obra social: No especificado", 500, 350 , paint);
+        canvas.drawText("Edad: "+edad, 100, 400 , paint);
+        canvas.drawText("Peso: No especificado", 500, 400 , paint);
+        canvas.drawText("Email: "+email, 100, 450 , paint);
+        canvas.drawLine(100, 500, 1000, 500, paint);
+
+        canvas.drawText("Datos del Estudio:", 100, 550 , subtitulo);
+        canvas.drawText("Médico operador: No especificado", 100, 600 , paint);
+        canvas.drawText("Médico derivador: No especificado", 500, 600 , paint);
+        canvas.drawText("Institución: No especificado", 100, 650 , paint);
+        canvas.drawText("Dirección: No especificado", 500, 650 , paint);
+        canvas.drawText("Inicio del estudio: "+fecha_array.get(fecha_array.size() - 1), 100, 700 , paint);
+        canvas.drawText("Final del estudio: "+fecha_array.get(0), 500, 700 , paint);
+        canvas.drawLine(100, 750, 1000, 750, paint);
+
+        //calculo los promedios para agregarlos en un resumen
+        canvas.drawText("Mediciones:", 100, 800 , subtitulo);
+        canvas.drawText("Total: "+fecha_array.size(), 100, 850 , paint);
+        double DBP_prom = calcularPromedio(DBP_array);
+        double SBP_prom = calcularPromedio(SBP_array);
+        double HR_prom = calcularPromedio(HR_array);
+        canvas.drawText("DBP Promedio: "+DBP_prom, 100, 900 , paint);
+        canvas.drawText("SBP Promedio: "+SBP_prom, 100, 950 , paint);
+        canvas.drawText("HR Promedio: "+HR_prom, 100, 1000 , paint);
+        canvas.drawLine(100, 1050, 1000, 1050, paint);
+
+        canvas.drawText("Aclaraciones:", 100, 1100 , subtitulo);
+        canvas.drawText("Los valores se muestran en orden del más reciente al más antiguo.", 100, 1150 , paint);
+        canvas.drawText("Los valores que se muestran en rojo indican valores fuera de lo normal para un paciente", 100, 1200 , paint);
+        canvas.drawText("entre 20 y 60 años en reposo.", 100, 1250 , paint);
+
+
+        //Le agrego el logo de Herni
+        agregarlogo(canvas);
+        document.finishPage(page); //termino la pagina actual
+        currentPage++;
+        PdfDocument.PageInfo newPageInfo = new PdfDocument.PageInfo.Builder(viewWidth, viewHeight, currentPage).create();
+        page = document.startPage(newPageInfo); //nueva pagina
+        canvas = page.getCanvas();
+        canvas.drawText("Resultados del estudio", 400, 100 , subtitulo);
+        int current_y = 150;
+
+        for (int i=0; i < HR_array.size();i++){
+            y = current_y + 50*i;
+
+            int HR = Integer.parseInt(HR_array.get(i));
+            int SBP = Integer.parseInt(SBP_array.get(i));
+            int DBP = Integer.parseInt(DBP_array.get(i));
+
+            canvas.drawText("Fecha: "+fecha_array.get(i), 100, y , paint);
+            if (HR < 60 || HR > 100){
+                canvas.drawText("HR: "+HR_array.get(i), 500, y , pain);
+            }
+            else {
+                canvas.drawText("HR: "+HR_array.get(i), 500, y , paint);
+            }
+            if (SBP < 80 || SBP > 125){ //Si la presion esta matada la escribe en rojo
+                canvas.drawText("SBP: "+SBP_array.get(i), 650, y , pain);
+            }
+            else{
+                canvas.drawText("SBP: "+SBP_array.get(i), 650, y , paint);
+            }
+            if (DBP < 60 || DBP > 85){ //Si la presion esta matada la escribe en rojo
+                canvas.drawText("DBP: "+DBP_array.get(i), 800, y , pain);
+            }
+            else{
+                canvas.drawText("DBP: "+DBP_array.get(i), 800, y , paint);
+            }
+
+            //Si se pasa de la pagina creo una nueva
+            if (y >= 1500){
+
+                // Agrego el logo antes de terminar la pagina
+                agregarlogo(canvas);
+
+                document.finishPage(page); //termino la pagina actual
+                currentPage++;
+
+                PdfDocument.PageInfo nuevaPageInfo = new PdfDocument.PageInfo.Builder(viewWidth, viewHeight, currentPage).create();
+                page = document.startPage(nuevaPageInfo); //nueva pagina
+                canvas = page.getCanvas();
+                current_y = 100;
+            }
+
+        }
+
+        agregarlogo(canvas);
+        document.finishPage(page);
+        currentPage++;
+
+        PdfDocument.PageInfo nuevaPageInfo = new PdfDocument.PageInfo.Builder(viewWidth, viewHeight, currentPage).create();
+        page = document.startPage(nuevaPageInfo); // Nueva página
+        canvas = page.getCanvas();
+
+        canvas.drawText("Gráfico en el tiempo", 400, 100 , subtitulo);
+
+        // Inflar un LinearLayout temporal sin ser visible
+        LinearLayout tempLayout = new LinearLayout(this);
+        tempLayout.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, viewHeight / 2));
+
+        // Crear el LineChart
+        LineChart chart = new LineChart(this);
+        chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        chart.getDescription().setEnabled(false); // Desactivar descripción
+
+        // Configurar datos de muestra
+        ArrayList<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < HR_array.size(); i++) {
+            entries.add(new Entry(i, Integer.parseInt(HR_array.get(i))));
+        }
+
+        // Agrego los valores de HR
+        LineDataSet dataSet = new LineDataSet(entries, "HR");
+        int rojo = Color.parseColor("#FC7F5D");
+        dataSet.setColor(rojo);
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+
+        // Agrego los de DBP
+        ArrayList<Entry> entries2 = new ArrayList<>();
+        for (int i = 0; i < DBP_array.size(); i++) {
+            entries2.add(new Entry(i, Integer.parseInt(DBP_array.get(i))));
+        }
+        LineDataSet dataSet2 = new LineDataSet(entries2, "DBP");
+        int verde = Color.parseColor("#40C89B");
+        dataSet2.setColor(verde);
+        lineData.addDataSet(dataSet2);
+
+        // Agrego los de SBP
+        ArrayList<Entry> entries3 = new ArrayList<>();
+        for (int i = 0; i < SBP_array.size(); i++) {
+            entries3.add(new Entry(i, Integer.parseInt(SBP_array.get(i))));
+        }
+        LineDataSet dataSet3 = new LineDataSet(entries3, "SBP");
+        int naranja = Color.parseColor("#FCC95D");
+        dataSet3.setColor(naranja);
+        lineData.addDataSet(dataSet3);
+
+        // Medir el gráfico dentro del LinearLayout temporal
+        tempLayout.addView(chart);
+        tempLayout.measure(
+                View.MeasureSpec.makeMeasureSpec(viewWidth, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(viewHeight / 2, View.MeasureSpec.EXACTLY)
+        );
+        tempLayout.layout(0, 0, tempLayout.getMeasuredWidth(), tempLayout.getMeasuredHeight());
+
+        // Convertir el gráfico en un Bitmap
+        Bitmap chartBitmap = convertirChartABitmap(chart);
+        // Crear una matriz de transformación
+        Matrix matrix2 = new Matrix();
+
+        // Calcular la escala para ajustar las dimensiones
+        float escalaX = (float) 1000 / chartBitmap.getWidth();
+        float escalaY = (float) 900 / chartBitmap.getHeight();
+
+        // Aplicar la escala a la matriz
+        matrix2.postScale(escalaX, escalaY);
+
+        // Crear una nueva imagen con las dimensiones escaladas
+        Bitmap finalBitmap = Bitmap.createBitmap(chartBitmap, 0, 0, chartBitmap.getWidth(), chartBitmap.getHeight(), matrix2, true);
+
+        // Dibujar el Bitmap en el Canvas del PDF
+        canvas.drawBitmap(finalBitmap, 50, 200, null);
+
+        agregarlogo(canvas);
+
+        // Finalizar la página
         document.finishPage(page);
 
+        //ESTO PARA MANDAR POR MAIL
         Context context = getApplicationContext();
         final File newFile = new File(Environment.getExternalStorageDirectory(),"PDFs");
         if(!newFile.exists())
