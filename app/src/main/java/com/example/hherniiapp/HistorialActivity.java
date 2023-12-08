@@ -68,6 +68,8 @@ public class HistorialActivity extends AppCompatActivity {
     private ListView HR_list;
     private TextView txt_SBP;
     private TextView txt_DBP;
+    private TextView fijo_SBP;
+    private TextView fijo_DBP;
 
 
     @Override
@@ -84,6 +86,8 @@ public class HistorialActivity extends AppCompatActivity {
         SBP_list = findViewById(R.id.sbp_list);
         DBP_list = findViewById(R.id.dbp_list);
         HR_list = findViewById(R.id.hr_list);
+        fijo_SBP = findViewById(R.id.SBP_txt);
+        fijo_DBP = findViewById(R.id.DBP_txt);
 
         ArrayList<String> fecha_array = new ArrayList<>();
         ArrayAdapter adapter_fecha = new ArrayAdapter<String>(this, R.layout.list_items, fecha_array);
@@ -97,6 +101,8 @@ public class HistorialActivity extends AppCompatActivity {
         ArrayList<String> hr_array = new ArrayList<>();
         ArrayAdapter adapter_hr = new ArrayAdapter<String>(this, R.layout.list_items, hr_array);
         HR_list.setAdapter(adapter_hr);
+
+        int rojardo = Color.parseColor("#AB2B2B");
 
 
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -126,8 +132,20 @@ public class HistorialActivity extends AppCompatActivity {
                     Collections.reverse(fecha_array);
 
                     if (!sbp_array.isEmpty() && !dbp_array.isEmpty()) {
+                        int DBP_actual = Integer.parseInt(dbp_array.get(0));
+                        int SBP_actual = Integer.parseInt(sbp_array.get(0));
+                        if (DBP_actual < 60 || DBP_actual > 85){
+                            txt_DBP.setTextColor(rojardo);
+                            fijo_DBP.setTextColor(rojardo);
+                        }
+                        if (SBP_actual < 80 || SBP_actual > 125){
+                            txt_SBP.setTextColor(rojardo);
+                            fijo_SBP.setTextColor(rojardo);
+                        }
                         txt_SBP.setText(sbp_array.get(0).toString());
                         txt_DBP.setText(dbp_array.get(0).toString());
+
+
                     } else{
                         Toast.makeText(getApplicationContext(), "No se encontró última medición", Toast.LENGTH_SHORT).show();
                     }
@@ -194,7 +212,6 @@ public class HistorialActivity extends AppCompatActivity {
                     Collections.reverse(dbp_array);
                     Collections.reverse(hr_array);
                     Collections.reverse(fecha_array);
-
 
                     printPDF(username[0], name[0], surname[0], edad[0], email[0], hr_array, sbp_array, dbp_array, fecha_array);
                     System.out.println(name[0]);
