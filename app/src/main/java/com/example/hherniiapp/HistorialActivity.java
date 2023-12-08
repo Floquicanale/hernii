@@ -102,7 +102,7 @@ public class HistorialActivity extends AppCompatActivity {
         ArrayAdapter adapter_hr = new ArrayAdapter<String>(this, R.layout.list_items, hr_array);
         HR_list.setAdapter(adapter_hr);
 
-        int rojardo = Color.parseColor("#AB2B2B");
+        int rojardo = Color.parseColor("#D33333");
 
 
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
