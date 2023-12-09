@@ -104,7 +104,6 @@ public class HistorialActivity extends AppCompatActivity {
 
         int rojardo = Color.parseColor("#D33333");
 
-
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid()).child("Presiones");
         Query query = referenceProfile.orderByKey().limitToLast(3);
@@ -186,6 +185,13 @@ public class HistorialActivity extends AppCompatActivity {
         final String[] surname = new String[1];
         final String[] edad = new String[1];
         final String[] email = new String[1];
+        final String[] dni = new String[1];
+        final String[] obra_social = new String[1];
+        final String[] peso = new String[1];
+        final String[] dr_op = new String[1];
+        final String[] dr_de = new String[1];
+        final String[] institucion = new String[1];
+        final String[] direc = new String[1];
 
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         DatabaseReference referenceProfile2 = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid());
@@ -201,6 +207,13 @@ public class HistorialActivity extends AppCompatActivity {
                     surname[0] = dataSnapshot.child("Informacion").child("surname").getValue().toString();
                     edad[0] = dataSnapshot.child("Informacion").child("age").getValue().toString();
                     email[0] = dataSnapshot.child("Informacion").child("user_email").getValue().toString();
+                    peso[0] = dataSnapshot.child("Informacion").child("peso").getValue().toString();
+                    obra_social[0] = dataSnapshot.child("Informacion").child("obra_social").getValue().toString();
+                    dni[0] = dataSnapshot.child("Informacion").child("dni").getValue().toString();
+                    dr_op[0] = dataSnapshot.child("Informacion").child("medico_op").getValue().toString();
+                    dr_de[0] = dataSnapshot.child("Informacion").child("medico_de").getValue().toString();
+                    institucion[0] = dataSnapshot.child("Informacion").child("institucion").getValue().toString();
+                    direc[0] = dataSnapshot.child("Informacion").child("direccion").getValue().toString();
 
                     for (DataSnapshot childSnapshot : dataSnapshot.child("Presiones").getChildren()) {
                         hr_array.add(childSnapshot.child("hr").getValue().toString());
@@ -213,7 +226,7 @@ public class HistorialActivity extends AppCompatActivity {
                     Collections.reverse(hr_array);
                     Collections.reverse(fecha_array);
 
-                    printPDF(username[0], name[0], surname[0], edad[0], email[0], hr_array, sbp_array, dbp_array, fecha_array);
+                    printPDF(username[0], name[0], surname[0], edad[0], email[0], obra_social[0], peso[0], dni[0], dr_op[0], dr_de[0], institucion[0], direc[0], hr_array, sbp_array, dbp_array, fecha_array);
                     System.out.println(name[0]);
                     //String presion= dataSnapshot.child("presion").getValue(String.class);
                     //String photourlFromD = dataSnapshot.child("photourl").getValue(String.class);
@@ -309,7 +322,7 @@ public class HistorialActivity extends AppCompatActivity {
         }
     }
 
-    private void printPDF(String usuario, String nombre, String apellido, String edad, String email, ArrayList<String> HR_array, ArrayList<String> SBP_array, ArrayList<String> DBP_array, ArrayList<String> fecha_array) {
+    private void printPDF(String usuario, String nombre, String apellido, String edad, String email, String obra_social, String peso,  String dni, String dr_op, String dr_de, String institu, String direc, ArrayList<String> HR_array, ArrayList<String> SBP_array, ArrayList<String> DBP_array, ArrayList<String> fecha_array) {
         System.out.println("Estoy en el printPDF");
         PdfDocument document = new PdfDocument();
 
@@ -344,19 +357,19 @@ public class HistorialActivity extends AppCompatActivity {
         canvas.drawLine(100, 200, 1000, 200, paint);
         canvas.drawText("Datos de Paciente:", 100, 250 , subtitulo);
         canvas.drawText("Usuario: "+usuario, 100, 300 , paint);
-        canvas.drawText("DNI: No especificado", 500, 300 , paint);
+        canvas.drawText("DNI: "+dni, 500, 300 , paint);
         canvas.drawText("Paciente: "+nombre+" "+apellido, 100, 350 , paint);
-        canvas.drawText("Obra social: No especificado", 500, 350 , paint);
+        canvas.drawText("Obra social: "+obra_social, 500, 350 , paint);
         canvas.drawText("Edad: "+edad, 100, 400 , paint);
-        canvas.drawText("Peso: No especificado", 500, 400 , paint);
+        canvas.drawText("Peso: "+peso, 500, 400 , paint);
         canvas.drawText("Email: "+email, 100, 450 , paint);
         canvas.drawLine(100, 500, 1000, 500, paint);
 
         canvas.drawText("Datos del Estudio:", 100, 550 , subtitulo);
-        canvas.drawText("Médico operador: No especificado", 100, 600 , paint);
-        canvas.drawText("Médico derivador: No especificado", 500, 600 , paint);
-        canvas.drawText("Institución: No especificado", 100, 650 , paint);
-        canvas.drawText("Dirección: No especificado", 500, 650 , paint);
+        canvas.drawText("Médico operador: "+dr_op, 100, 600 , paint);
+        canvas.drawText("Médico derivador: "+dr_de, 500, 600 , paint);
+        canvas.drawText("Institución: "+institu, 100, 650 , paint);
+        canvas.drawText("Dirección: "+direc, 500, 650 , paint);
         canvas.drawText("Inicio del estudio: "+fecha_array.get(fecha_array.size() - 1), 100, 700 , paint);
         canvas.drawText("Final del estudio: "+fecha_array.get(0), 500, 700 , paint);
         canvas.drawLine(100, 750, 1000, 750, paint);

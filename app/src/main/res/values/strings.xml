@@ -34,6 +34,13 @@
     <string name="nombre">Nombre</string>
     <string name="apellido">Apellido</string>
     <string name="username">Nombre de usuario</string>
+    <string name="documento">Documento</string>
+    <string name="obra_social">Obra Social (empresa)</string>
+    <string name="peso">Peso (en kg)</string>
+    <string name="dr_op">Médico operador</string>
+    <string name="dr_de">Médico derivador</string>
+    <string name="institucion">Institución</string>
+    <string name="direc">Dirección de la institución</string>
 
 
     <string name="save">Guardar</string>

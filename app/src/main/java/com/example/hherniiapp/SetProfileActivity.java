@@ -50,7 +50,7 @@ public class SetProfileActivity extends AppCompatActivity {
     private StorageReference mStorage;
     String photourl;
     Button save, choose_image;
-    EditText name, surname, age, user_email, username;
+    EditText name, surname, age, user_email, username, os, weight, doc, dr_op, dr_de, institucion, direc;
     ImageView profile_pic;
     Uri imageUri;
     private Bitmap bitmap;
@@ -72,6 +72,13 @@ public class SetProfileActivity extends AppCompatActivity {
         profile_pic = findViewById(R.id.profile_pic);
         user_email = findViewById(R.id.user_email);
         username = findViewById(R.id.username);
+        weight = findViewById(R.id.weight);
+        os = findViewById(R.id.os);
+        doc = findViewById(R.id.doc);
+        dr_op = findViewById(R.id.dr_op);
+        dr_de = findViewById(R.id.dr_de);
+        institucion = findViewById(R.id.institucion);
+        direc = findViewById(R.id.direc);
 
 
         showUserData();
@@ -163,15 +170,29 @@ public class SetProfileActivity extends AppCompatActivity {
                     String usernameFromDB = dataSnapshot.child("username").getValue(String.class);
                     String nameFromDB = dataSnapshot.child("name").getValue(String.class);
                     String surnameFromDB = dataSnapshot.child("surname").getValue(String.class);
+                    String docFromDB = dataSnapshot.child("dni").getValue(String.class);
+                    String osFromDB = dataSnapshot.child("obra_social").getValue(String.class);
+                    String pesoFromDB = dataSnapshot.child("peso").getValue(String.class);
                     String genderFromDB = dataSnapshot.child("age").getValue(String.class);
                     String emailFromDB = dataSnapshot.child("user_email").getValue(String.class);
                     String photourlFromDB = dataSnapshot.child("photourl").getValue(String.class);
+                    String dropFromDB = dataSnapshot.child("medico_op").getValue(String.class);
+                    String drdeFromDB = dataSnapshot.child("medico_de").getValue(String.class);
+                    String instFromDB = dataSnapshot.child("institucion").getValue(String.class);
+                    String direcFromDB = dataSnapshot.child("direccion").getValue(String.class);
 
                     name.setText(nameFromDB);
                     surname.setText(surnameFromDB);
                     username.setText(usernameFromDB);
                     user_email.setText(emailFromDB);
                     age.setText(genderFromDB);
+                    weight.setText(pesoFromDB);
+                    os.setText(osFromDB);
+                    doc.setText(docFromDB);
+                    dr_op.setText(dropFromDB);
+                    dr_de.setText(drdeFromDB);
+                    institucion.setText(instFromDB);
+                    direc.setText(direcFromDB);
                     Picasso.get().load(photourlFromDB).into(profile_pic);
 
                     dialog.dismiss();
@@ -195,9 +216,17 @@ public class SetProfileActivity extends AppCompatActivity {
         User data = new User(username.getText().toString(),
                 name.getText().toString(),
                 surname.getText().toString(),
+                doc.getText().toString(),
+                os.getText().toString(),
+                weight.getText().toString(),
                 age.getText().toString(),
                 photourl,
-                user_email.getText().toString().trim());
+                user_email.getText().toString().trim(),
+                dr_op.getText().toString(),
+                dr_de.getText().toString(),
+                institucion.getText().toString(),
+                direc.getText().toString()
+        );
 
         if (name.getText().toString().isEmpty() ||
                 surname.getText().toString().isEmpty() ||

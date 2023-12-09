@@ -85,6 +85,17 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/documento">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/doc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="@string/edad">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -96,10 +107,86 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/peso">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/obra_social">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/os"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="@string/email">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/user_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/extra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingTop="21dp"
+                    android:text="Información extra"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/dr_op">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dr_op"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/dr_de">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dr_de"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/institucion">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/institucion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/direc">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/direc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>

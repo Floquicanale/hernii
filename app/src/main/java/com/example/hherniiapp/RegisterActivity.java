@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     //Strings
-    EditText email, password, confirm_password, nombre, apellido, user_username, edad;
+    EditText email, password, confirm_password, nombre, apellido, user_username, edad, DNI, obra_social, peso;
     Button registrarse;
     String photoUrl;
 
@@ -78,6 +78,9 @@ public class RegisterActivity extends AppCompatActivity {
         edad = findViewById(R.id.edad);
         user_username = findViewById(R.id.username);
         registrarse = findViewById(R.id.registrarse);
+        obra_social = findViewById(R.id.obra_social);
+        DNI = findViewById(R.id.DNI);
+        peso = findViewById(R.id.peso);
 
         registrarse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,12 +121,25 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     // Proceed with the user data update only if user is not null
                                     if (user != null) {
+                                        //Aca chequeo si no tienen datos se escribe "No especificado"
+                                        verificarYEstablecerNoEspecificado(user_username);
+                                        verificarYEstablecerNoEspecificado(DNI);
+                                        verificarYEstablecerNoEspecificado(obra_social);
+                                        verificarYEstablecerNoEspecificado(peso);
+
                                         User data = new User(user_username.getText().toString(),
                                                 nombre.getText().toString(),
                                                 apellido.getText().toString(),
+                                                DNI.getText().toString(),
+                                                obra_social.getText().toString(),
+                                                peso.getText().toString(),
                                                 edad.getText().toString(),
                                                 null,
-                                                email.getText().toString().trim()
+                                                email.getText().toString().trim(),
+                                                "No especificado",
+                                                "No especificado",
+                                                "No especificado",
+                                                "No especificado"
                                         );
 
                                         DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
@@ -157,6 +173,12 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+    private void verificarYEstablecerNoEspecificado(EditText editText) {
+        String valor = editText.getText().toString();
+        if (valor.isEmpty()) {
+            editText.setText("No especificado");
         }
     }
 
