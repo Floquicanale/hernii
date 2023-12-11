@@ -377,9 +377,9 @@ public class HistorialActivity extends AppCompatActivity {
         //calculo los promedios para agregarlos en un resumen
         canvas.drawText("Mediciones:", 100, 800 , subtitulo);
         canvas.drawText("Total: "+fecha_array.size(), 100, 850 , paint);
-        double DBP_prom = calcularPromedio(DBP_array);
-        double SBP_prom = calcularPromedio(SBP_array);
-        double HR_prom = calcularPromedio(HR_array);
+        double DBP_prom = Math.round(calcularPromedio(DBP_array));
+        double SBP_prom = Math.round(calcularPromedio(SBP_array));
+        double HR_prom = Math.round(calcularPromedio(HR_array));
         canvas.drawText("DBP Promedio: "+DBP_prom, 100, 900 , paint);
         canvas.drawText("SBP Promedio: "+SBP_prom, 100, 950 , paint);
         canvas.drawText("HR Promedio: "+HR_prom, 100, 1000 , paint);
