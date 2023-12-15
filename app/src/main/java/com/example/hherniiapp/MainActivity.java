@@ -4,7 +4,9 @@ import static java.lang.Math.round;
 import static kotlinx.coroutines.DelayKt.delay;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -16,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -93,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> PPG = new ArrayList<>(6000);
     private static final int PERMISSION_REQUEST_CODE = 101;
 
+    private static final int NOTIFICATION_INTERVAL = 15 * 60 * 1000; // 15 minutes in milliseconds
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +119,21 @@ public class MainActivity extends AppCompatActivity {
         transmitir = findViewById(R.id.transmitir);
         myBT = BluetoothAdapter.getDefaultAdapter();
         Request_enable_BT = 1;
+
+        //Notificaciones
+        NotificationHelper.createNotificationChannel(this);
+
+        // Set up the alarm manager to trigger the notification every 15 minutes
+        Intent intent = new Intent(getApplicationContext(), NotificationHelper.class); // Updated intent to NotificationHelper
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + NOTIFICATION_INTERVAL,
+                NOTIFICATION_INTERVAL,
+                pendingIntent
+        );
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
