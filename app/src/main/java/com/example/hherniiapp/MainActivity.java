@@ -6,6 +6,8 @@ import static kotlinx.coroutines.DelayKt.delay;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -72,6 +74,10 @@ import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String CHANNEL_ID = "MyChannel";
+    private static final CharSequence CHANNEL_NAME = "MyChannelName";
+    private static final String CHANNEL_DESCRIPTION = "MyChannelDescription";
+
     Button conectar, obtener_disp, desconectar, transmitir;
     Button calibracion;
     Button cali1, cali2, cali3;
@@ -121,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         Request_enable_BT = 1;
 
         //Notificaciones
-        NotificationHelper.createNotificationChannel(this);
+        createNotificationChannel();
 
         // Set up the alarm manager to trigger the notification every 15 minutes
         Intent intent = new Intent(getApplicationContext(), NotificationHelper.class); // Updated intent to NotificationHelper
@@ -291,6 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
                             try {
                                 float Final_PTT = PTT.CalcularPTT(ECG, PPG, SCG);
+
+                                Toast.makeText(getApplicationContext(), "El valor de la PTT es: "+ Final_PTT, Toast.LENGTH_SHORT).show();
 
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                 DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -1169,6 +1177,18 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("value", "Permission Denied, You cannot use local drive .");
                 }
                 break;
+        }
+    }
+
+    public void createNotificationChannel() {
+        Log.i("Notificacion","Se inicia el envio de notificacion");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_DESCRIPTION);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 

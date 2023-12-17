@@ -5,7 +5,9 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -101,6 +103,17 @@ public class RegisterActivity extends AppCompatActivity {
         //}
     }
 
+    // Supongamos que tienes el ID del recurso drawable
+    private int photo_H_default = R.drawable.logo_h_round;
+
+    // Convierte el ID del recurso drawable a un URI
+    private Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+            "://" + getResources().getResourcePackageName(photo_H_default)
+            + '/' + getResources().getResourceTypeName(photo_H_default)
+            + '/' + getResources().getResourceEntryName(photo_H_default));
+
+    // Ahora, `imageUri` contiene el URI del drawable
+
     public void RegistrarUsuario() {
         if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty() ||
                 nombre.getText().toString().isEmpty() ||
@@ -134,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 obra_social.getText().toString(),
                                                 peso.getText().toString(),
                                                 edad.getText().toString(),
-                                                null,
+                                                imageUri.toString(),
                                                 email.getText().toString().trim(),
                                                 "No especificado",
                                                 "No especificado",

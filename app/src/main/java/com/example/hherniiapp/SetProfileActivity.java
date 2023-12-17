@@ -52,7 +52,7 @@ public class SetProfileActivity extends AppCompatActivity {
     Button save, choose_image;
     EditText name, surname, age, user_email, username, os, weight, doc, dr_op, dr_de, institucion, direc;
     ImageView profile_pic;
-    Uri imageUri;
+    private Uri imageUri;
     private Bitmap bitmap;
 
     @Override
@@ -120,9 +120,13 @@ public class SetProfileActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageUri == null) {
-                    Toast.makeText(SetProfileActivity.this, "Selccione una imagen por favor", Toast.LENGTH_SHORT).show();
+                if (imageUri.toString().length()>100) {
+                    photourl = imageUri.toString();
+                    uploadData();
+
                 } else {
+                    Log.i("Image Uri de la DB",imageUri.toString());
+
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     AlertDialog.Builder builder = new AlertDialog.Builder(SetProfileActivity.this);
@@ -130,7 +134,6 @@ public class SetProfileActivity extends AppCompatActivity {
                     builder.setView(R.layout.progress_layout);
                     AlertDialog dialog = builder.create();
                     dialog.show();
-
                     storage.getReference("Users").child(firebaseUser.getUid()).child("Informacion").putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -194,6 +197,8 @@ public class SetProfileActivity extends AppCompatActivity {
                     institucion.setText(instFromDB);
                     direc.setText(direcFromDB);
                     Picasso.get().load(photourlFromDB).into(profile_pic);
+
+                    imageUri = Uri.parse(photourlFromDB);
 
                     dialog.dismiss();
                 } else {
