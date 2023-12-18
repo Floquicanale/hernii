@@ -104,6 +104,10 @@ public class HistorialActivity extends AppCompatActivity {
 
         int rojardo = Color.parseColor("#D33333");
 
+        //String PTT = getIntent().getStringExtra("PTT").toString();
+        //Toast.makeText(getApplicationContext(), "El valor de la PTT es: "+ PTT, Toast.LENGTH_SHORT).show();
+
+
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid()).child("Presiones");
         Query query = referenceProfile.orderByKey().limitToLast(3);
@@ -463,6 +467,10 @@ public class HistorialActivity extends AppCompatActivity {
         LineChart chart = new LineChart(this);
         chart.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         chart.getDescription().setEnabled(false); // Desactivar descripción
+
+        Collections.reverse(HR_array);
+        Collections.reverse(DBP_array);
+        Collections.reverse(SBP_array);
 
         // Configurar datos de muestra
         ArrayList<Entry> entries = new ArrayList<>();

@@ -48,8 +48,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.io.File;
@@ -298,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 float Final_PTT = PTT.CalcularPTT(ECG, PPG, SCG);
 
-                                Toast.makeText(getApplicationContext(), "El valor de la PTT es: "+ Final_PTT, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "El valor de la PTT es: "+ Final_PTT, Toast.LENGTH_SHORT).show();
 
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                 DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -339,10 +341,11 @@ public class MainActivity extends AppCompatActivity {
                                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                             String fecha = sdf.format(calendar.getTime());
                                             String HR = Integer.toString(PTT.HR(ECG));
+                                            String PTT = Double.toString(Final_PTT);
 
                                             //Firebase Subir Datos
                                             DatabaseReference resultadosRef = referenceProfile.child(firebaseUser.getUid()).child("Presiones");
-                                            Presiones data = new Presiones(SBP, DBP, HR);
+                                            Presiones data = new Presiones(SBP, DBP, HR, PTT);
                                             resultadosRef.child(fecha).setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
@@ -380,6 +383,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 // Ir a la pantalla de historial.
                                 Intent i = new Intent(getApplicationContext(), HistorialActivity.class);
+                                //i.putExtra("PTT",Final_PTT);
                                 startActivity(i);
 
 
@@ -510,6 +514,14 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             PTT_Cali1 = PTT.CalcularPTT(ECG, PPG, SCG);
                             System.out.println("PTT Cali 1: " + PTT_Cali1);
+                            String valorSistolica1 = sistolica1.getText().toString();
+                            //se tiene que escribir la sistolica primero
+                            if (valorSistolica1 != null && !valorSistolica1.isEmpty()) {
+                                GuardarInfo(null, null, null, null, valorSistolica1, null, null, diastolica1.getText().toString(), null, null, Double.toString(PTT_Cali1),null, null );
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -635,6 +647,14 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             PTT_Cali2 = PTT.CalcularPTT(ECG, PPG, SCG);
                             System.out.println("PTT Cali 2: " + PTT_Cali2);
+                            String valorSistolica2 = sistolica2.getText().toString();
+
+                            if (valorSistolica2 != null && !valorSistolica2.isEmpty()) {
+                                GuardarInfo(null, null, null, null, null, valorSistolica2, null, null, diastolica2.getText().toString(), null,null, Double.toString(PTT_Cali2), null );
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -757,6 +777,13 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             PTT_Cali3 = PTT.CalcularPTT(ECG, PPG, SCG);
                             System.out.println("PTT Cali 3: " + PTT_Cali3);
+                            String valorSistolica3 = sistolica3.getText().toString();
+
+                            if (valorSistolica3 != null && !valorSistolica3.isEmpty()) {
+                                GuardarInfo(null, null, null, null, null, null, valorSistolica3, null, null, diastolica3.getText().toString(),null, null, Double.toString(PTT_Cali3) );
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -780,47 +807,55 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Traer los datos de la calibracion y de PTT
-
-                double Sys1 = Double.parseDouble(sistolica1.getText().toString());
-                double Sys2 = Double.parseDouble(sistolica2.getText().toString());
-                double Sys3 = Double.parseDouble(sistolica3.getText().toString());
-                double Dia1 = Double.parseDouble(diastolica1.getText().toString());
-                double Dia2 = Double.parseDouble(diastolica2.getText().toString());
-                double Dia3 = Double.parseDouble(diastolica3.getText().toString());
-
-                // Datos de presión sistólica
-                double[] SBP = { Sys1, Sys2, Sys3 };
-
-                // Datos de presión diastólica
-                double[] DBP = { Dia1, Dia2, Dia3 };
-
-                // Datos de PTT
-                double[] PTT_inv = { 1/PTT_Cali1, 1/PTT_Cali2, 1/PTT_Cali3 };
-
-                double[] coefSBP = calcularRegresion(PTT_inv,SBP);
-                double[] coefDBP = calcularRegresion(PTT_inv,DBP);
-
-                String A_S = Double.toString(coefSBP[0]);
-                String B_S = Double.toString(coefSBP[1]);
-                String A_D = Double.toString(coefDBP[0]);
-                String B_D = Double.toString(coefDBP[1]);
-
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                DatabaseReference referenceProfile2 = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid()).child("Calibracion");
 
-                Calibration data = new Calibration(A_S, B_S, A_D, B_D);
+                referenceProfile2.addListenerForSingleValueEvent(new ValueEventListener() {
+                     @Override
+                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                         if (dataSnapshot.exists()) {
+                             try {
+                                 double Sys1 = Double.parseDouble(dataSnapshot.child("sbp1").getValue().toString());
+                                 double Sys2 = Double.parseDouble(dataSnapshot.child("sbp2").getValue().toString());
+                                 double Sys3 = Double.parseDouble(dataSnapshot.child("sbp3").getValue().toString());
+                                 double Dia1 = Double.parseDouble(dataSnapshot.child("dbp1").getValue().toString());
+                                 double Dia2 = Double.parseDouble(dataSnapshot.child("dbp2").getValue().toString());
+                                 double Dia3 = Double.parseDouble(dataSnapshot.child("dbp3").getValue().toString());
+                                 double PTT1 = Double.parseDouble(dataSnapshot.child("ptt1").getValue().toString());
+                                 double PTT2 = Double.parseDouble(dataSnapshot.child("ptt2").getValue().toString());
+                                 double PTT3 = Double.parseDouble(dataSnapshot.child("ptt3").getValue().toString());
+                                 if (validarDatos(Sys1, Sys2, Sys3, Dia1, Dia2, Dia3, PTT1, PTT2, PTT3)) {
 
-                DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
-                referenceProfile.child(firebaseUser.getUid()).child("Calibracion").setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                     // Datos de presión sistólica
+                                     double[] SBP_list = {Sys1, Sys2, Sys3};
+
+                                     // Datos de presión diastólica
+                                     double[] DBP_list = {Dia1, Dia2, Dia3};
+
+                                     // Datos de PTT
+                                     double[] PTT_inv = {1 / PTT1, 1 / PTT2, 1 / PTT3};
+
+                                     double[] coefSBP = calcularRegresion(PTT_inv, SBP_list);
+                                     double[] coefDBP = calcularRegresion(PTT_inv, DBP_list);
+
+                                     String A_S = Double.toString(coefSBP[0]);
+                                     String B_S = Double.toString(coefSBP[1]);
+                                     String A_D = Double.toString(coefDBP[0]);
+                                     String B_D = Double.toString(coefDBP[1]);
+
+                                     GuardarInfo(A_S, B_S, A_D, B_D, null, null, null, null, null, null, null, null, null);
+                                 } else { Toast.makeText(getApplicationContext(), "ERROR en los datos. Repetir calibración", Toast.LENGTH_SHORT).show();}
+
+                             } catch (NumberFormatException e) {
+                                 // Manejar la excepción de conversión de cadena a número
+                                 e.printStackTrace();}
+
+                         }else{
+                             Log.e("Snapshot","no existe el snapshot");
+                         }
+                     }
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(getApplicationContext(), "Calibración Exitosa!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(i);
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Calibration failed!", Toast.LENGTH_SHORT).show();
-                        }
+                    public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
             }
@@ -1114,6 +1149,66 @@ public class MainActivity extends AppCompatActivity {
 
      */
 
+    // FIREBASE
+    private void GuardarInfo(String a_sbp, String b_sbp, String a_dbp, String b_dbp, String sbp1, String sbp2, String sbp3, String dbp1, String dbp2, String dbp3, String ptt1, String ptt2, String ptt3) {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid()).child("Calibracion");
+
+            Calibration cali = new Calibration(a_sbp, b_sbp, a_dbp, b_dbp, ptt1, ptt2, ptt3, sbp1, sbp2, sbp3, dbp1, dbp2, dbp3);
+
+            // Verifica y actualiza solo los valores no nulos en la base de datos
+            Map<String, Object> updateValues = new HashMap<>();
+            updateIfNotNull(updateValues, "a_sbp", a_sbp);
+            updateIfNotNull(updateValues, "b_sbp", b_sbp);
+            updateIfNotNull(updateValues, "a_dbp", a_dbp);
+            updateIfNotNull(updateValues, "b_dbp", b_dbp);
+            updateIfNotNull(updateValues, "sbp1", sbp1);
+            updateIfNotNull(updateValues, "sbp2", sbp2);
+            updateIfNotNull(updateValues, "sbp3", sbp3);
+            updateIfNotNull(updateValues, "dbp1", dbp1);
+            updateIfNotNull(updateValues, "dbp2", dbp2);
+            updateIfNotNull(updateValues, "dbp3", dbp3);
+            updateIfNotNull(updateValues, "ptt1", ptt1);
+            updateIfNotNull(updateValues, "ptt2", ptt2);
+            updateIfNotNull(updateValues, "ptt3", ptt3);
+
+            // Actualiza los valores no nulos en la base de datos
+            referenceProfile.updateChildren(updateValues)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Exception exception = task.getException();
+                                if (exception != null) {
+                                    exception.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+    private void updateIfNotNull(Map<String, Object> updateValues, String key, String value) {
+        if (value != null) {
+            updateValues.put(key, value);
+        }
+    }
+
+    private boolean validarDatos(double... valores) {
+        for (double valor : valores) {
+            if (valor <= 0) {
+                // Si algún valor es negativo o cero, muestra un Toast y retorna false
+                Toast.makeText(getApplicationContext(), "Datos incorrectos. Repetir calibración", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        // Todos los valores son válidos
+        return true;
+    }
 
     //CSV creacion
     private void CreateCSV(ArrayList <Integer> data) {

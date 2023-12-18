@@ -44,9 +44,6 @@
             android:name=".SetProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".CalibrarActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true" />
         <activity
