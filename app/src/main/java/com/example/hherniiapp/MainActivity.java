@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View view) {
 
-                if (BTSocket.isConnected()) {
+                if (BTSocket != null) {
                     try {
                         SocketInputStream = BTSocket.getInputStream();
                         SocketOutputStream = BTSocket.getOutputStream();
@@ -410,396 +410,408 @@ public class MainActivity extends AppCompatActivity {
         cali1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setCancelable(false);
-                builder.setView(R.layout.midiendo_layout);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                if (BTSocket != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setCancelable(false);
+                    builder.setView(R.layout.midiendo_layout);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                try {
-                    SocketInputStream = BTSocket.getInputStream();
-                    SocketOutputStream = BTSocket.getOutputStream();
-                    System.out.println("Entre al try");
-                } catch (IOException e) {
-                    Log.e("Bluetooth", "Error al crear el socket Bluetooth", e);
-                }
-
-                Thread dataThread1 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //InputStream socketInputStream = SocketInputStream; //Me parece que puedo borrar esta declaración
-                        DataInputStream dataInputStream = new DataInputStream(SocketInputStream);
-                        System.out.println("Estoy en el thread");
-                        //BufferedReader reader = new BufferedReader(new InputStreamReader(SocketInputStream));
-                        //Manda el caracter "1" a Arduino
-                        String signal = "1"; // La señal que desea enviar
-                        try {
-                            SocketOutputStream.write(signal.getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        while (true) { //Esto tiene que correr 120 veces para llenar 1 minuto xq de arduino vienen 100 datos por sensor
-                            try {
-                                byte highByte = dataInputStream.readByte();
-                                if (count == 0 && highByte == 0) {
-                                    highByte = dataInputStream.readByte();
-                                }
-                                byte lowByte = dataInputStream.readByte();
-                                //byte middleByte = dataInputStream.readByte();
-
-                                //| ((lowByte & 0xFF) << 16);
-                                int valorRecibido = (highByte & 0xFF) | ((lowByte & 0xFF) << 8);
-                                if ((lowByte & 0x80) != 0) {
-                                    valorRecibido |= 0xFFFF0000; // Establecer bits adicionales a 1 para valores negativos
-                                }
-
-                                //System.out.println(" HighByte: "+highByte+"LowByte: "+lowByte);
-
-                                //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
-                                //System.out.println(valorRecibido);
-                                datosArray.add(valorRecibido);
-
-                                count++;
-
-                                if (count == 18000) { //se toma medio segundo de data
-                                    String signal2 = "0"; // La señal que desea enviar
-                                    try {
-                                        SocketOutputStream.write(signal2.getBytes());//se le pide al arduino que deje de enviar datos
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    System.out.println("YA ESTA");
-                                    count = 0;
-                                    break;
-                                }
-
-                                // Muestra en TextView
-                            } catch (IOException e) {
-                                // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        //ECG = splitArray(datosArray, 0, 12000);
-                        //SCG = splitArray(datosArray, 1, 12000);
-                        //PPG = splitArray(datosArray, 2, 12000);
-                        for (Integer valor : datosArray) {
-                            // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
-                            if (valor > -1000 && valor < 1000) {
-                                //System.out.println(valor);
-                                SCG.add(valor);
-                            } else if (round((float) valor / 10000) == 2) {
-                                ECG.add(valor - 20000);
-                                //System.out.println(valor);
-                            } else if (valor > -100000 && valor < -1000) {
-                                PPG.add(valor * -1);
-                                //System.out.println(valor);
-                            }
-                        }
-
-                        /*
-                        if (checkPermission()) {
-                            CreateCSV(ECG);
-                            CreateCSV(PPG);
-                            CreateCSV(SCG);
-                        } else {
-                            requestPermission();
-                            CreateCSV(ECG);
-                            CreateCSV(PPG);
-                            CreateCSV(SCG);
-                        }
-
-                         */
-
-                        try {
-                            PTT_Cali1 = PTT.CalcularPTT(ECG, PPG, SCG);
-                            System.out.println("PTT Cali 1: " + PTT_Cali1);
-                            String valorSistolica1 = sistolica1.getText().toString();
-                            //se tiene que escribir la sistolica primero
-                            if (valorSistolica1 != null && !valorSistolica1.isEmpty()) {
-                                GuardarInfo(null, null, null, null, valorSistolica1, null, null, diastolica1.getText().toString(), null, null, Double.toString(PTT_Cali1),null, null );
-
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                            }
-                        });
+                    try {
+                        SocketInputStream = BTSocket.getInputStream();
+                        SocketOutputStream = BTSocket.getOutputStream();
+                        System.out.println("Entre al try");
+                    } catch (IOException e) {
+                        Log.e("Bluetooth", "Error al crear el socket Bluetooth", e);
                     }
-                });
-                // Inicia el hilo secundario
-                dataThread1.start();
+
+                    Thread dataThread1 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //InputStream socketInputStream = SocketInputStream; //Me parece que puedo borrar esta declaración
+                            DataInputStream dataInputStream = new DataInputStream(SocketInputStream);
+                            System.out.println("Estoy en el thread");
+                            //BufferedReader reader = new BufferedReader(new InputStreamReader(SocketInputStream));
+                            //Manda el caracter "1" a Arduino
+                            String signal = "1"; // La señal que desea enviar
+                            try {
+                                SocketOutputStream.write(signal.getBytes());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            while (true) { //Esto tiene que correr 120 veces para llenar 1 minuto xq de arduino vienen 100 datos por sensor
+                                try {
+                                    byte highByte = dataInputStream.readByte();
+                                    if (count == 0 && highByte == 0) {
+                                        highByte = dataInputStream.readByte();
+                                    }
+                                    byte lowByte = dataInputStream.readByte();
+                                    //byte middleByte = dataInputStream.readByte();
+
+                                    //| ((lowByte & 0xFF) << 16);
+                                    int valorRecibido = (highByte & 0xFF) | ((lowByte & 0xFF) << 8);
+                                    if ((lowByte & 0x80) != 0) {
+                                        valorRecibido |= 0xFFFF0000; // Establecer bits adicionales a 1 para valores negativos
+                                    }
+
+                                    //System.out.println(" HighByte: "+highByte+"LowByte: "+lowByte);
+
+                                    //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
+                                    //System.out.println(valorRecibido);
+                                    datosArray.add(valorRecibido);
+
+                                    count++;
+
+                                    if (count == 18000) { //se toma medio segundo de data
+                                        String signal2 = "0"; // La señal que desea enviar
+                                        try {
+                                            SocketOutputStream.write(signal2.getBytes());//se le pide al arduino que deje de enviar datos
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        System.out.println("YA ESTA");
+                                        count = 0;
+                                        break;
+                                    }
+
+                                    // Muestra en TextView
+                                } catch (IOException e) {
+                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
+                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            //ECG = splitArray(datosArray, 0, 12000);
+                            //SCG = splitArray(datosArray, 1, 12000);
+                            //PPG = splitArray(datosArray, 2, 12000);
+                            for (Integer valor : datosArray) {
+                                // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
+                                if (valor > -1000 && valor < 1000) {
+                                    //System.out.println(valor);
+                                    SCG.add(valor);
+                                } else if (round((float) valor / 10000) == 2) {
+                                    ECG.add(valor - 20000);
+                                    //System.out.println(valor);
+                                } else if (valor > -100000 && valor < -1000) {
+                                    PPG.add(valor * -1);
+                                    //System.out.println(valor);
+                                }
+                            }
+
+                            /*
+                            if (checkPermission()) {
+                                CreateCSV(ECG);
+                                CreateCSV(PPG);
+                                CreateCSV(SCG);
+                            } else {
+                                requestPermission();
+                                CreateCSV(ECG);
+                                CreateCSV(PPG);
+                                CreateCSV(SCG);
+                            }
+
+                             */
+
+                            try {
+                                PTT_Cali1 = PTT.CalcularPTT(ECG, PPG, SCG);
+                                System.out.println("PTT Cali 1: " + PTT_Cali1);
+                                String valorSistolica1 = sistolica1.getText().toString();
+                                //se tiene que escribir la sistolica primero
+                                if (valorSistolica1 != null && !valorSistolica1.isEmpty()) {
+                                    GuardarInfo(null, null, null, null, valorSistolica1, null, null, diastolica1.getText().toString(), null, null, Double.toString(PTT_Cali1), null, null);
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                    // Inicia el hilo secundario
+                    dataThread1.start();
+                } else{
+                    Toast.makeText(getApplicationContext(), "El módulo Bluetooth no está conectado", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         cali2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setCancelable(false);
-                builder.setView(R.layout.midiendo_layout);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                if (BTSocket != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setCancelable(false);
+                    builder.setView(R.layout.midiendo_layout);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                try {
-                    SocketInputStream = BTSocket.getInputStream();
-                    SocketOutputStream = BTSocket.getOutputStream();
-                    System.out.println("Entre al try");
-                } catch (IOException e) {
-                    Log.e("Bluetooth", "Error al crear el socket Bluetooth", e);
-                }
-
-                Thread dataThread2 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //InputStream socketInputStream = SocketInputStream; //Me parece que puedo borrar esta declaración
-                        DataInputStream dataInputStream = new DataInputStream(SocketInputStream);
-                        System.out.println("Estoy en el thread");
-                        //BufferedReader reader = new BufferedReader(new InputStreamReader(SocketInputStream));
-                        //Manda el caracter "1" a Arduino
-                        String signal = "1"; // La señal que desea enviar
-                        try {
-                            SocketOutputStream.write(signal.getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        while (true) { //Esto tiene que correr 120 veces para llenar 1 minuto xq de arduino vienen 100 datos por sensor
-                            try {
-                                byte highByte = dataInputStream.readByte();
-                                if (count == 0 && highByte == 0) {
-                                    highByte = dataInputStream.readByte();
-                                }
-                                byte lowByte = dataInputStream.readByte();
-                                //byte middleByte = dataInputStream.readByte();
-
-                                //| ((lowByte & 0xFF) << 16);
-                                int valorRecibido = (highByte & 0xFF) | ((lowByte & 0xFF) << 8);
-                                if ((lowByte & 0x80) != 0) {
-                                    valorRecibido |= 0xFFFF0000; // Establecer bits adicionales a 1 para valores negativos
-                                }
-
-                                //System.out.println(" HighByte: "+highByte+"LowByte: "+lowByte);
-
-                                //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
-                                //System.out.println(valorRecibido);
-                                datosArray.add(valorRecibido);
-
-                                count++;
-
-                                if (count == 18000) { //se toma medio segundo de data
-                                    String signal2 = "0"; // La señal que desea enviar
-                                    try {
-                                        SocketOutputStream.write(signal2.getBytes());//se le pide al arduino que deje de enviar datos
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    System.out.println("YA ESTA");
-                                    count = 0;
-                                    break;
-                                }
-
-                                // Muestra en TextView
-                            } catch (IOException e) {
-                                // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        //ECG = splitArray(datosArray, 0, 12000);
-                        //SCG = splitArray(datosArray, 1, 12000);
-                        //PPG = splitArray(datosArray, 2, 12000);
-                        for (Integer valor : datosArray) {
-                            // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
-                            if (valor > -1000 && valor < 1000) {
-                                //System.out.println(valor);
-                                SCG.add(valor);
-                            } else if (round((float) valor / 10000) == 2) {
-                                ECG.add(valor - 20000);
-                                //System.out.println(valor);
-                            } else if (valor > -100000 && valor < -1000) {
-                                PPG.add(valor * -1);
-                                //System.out.println(valor);
-                            }
-                        }
-
-                        /*
-                        if (checkPermission()) {
-                            CreateCSV(ECG);
-                            CreateCSV(PPG);
-                            CreateCSV(SCG);
-                        } else {
-                            requestPermission();
-                            CreateCSV(ECG);
-                            CreateCSV(PPG);
-                            CreateCSV(SCG);
-                        }
-
-                         */
-
-                        try {
-                            PTT_Cali2 = PTT.CalcularPTT(ECG, PPG, SCG);
-                            System.out.println("PTT Cali 2: " + PTT_Cali2);
-                            String valorSistolica2 = sistolica2.getText().toString();
-
-                            if (valorSistolica2 != null && !valorSistolica2.isEmpty()) {
-                                GuardarInfo(null, null, null, null, null, valorSistolica2, null, null, diastolica2.getText().toString(), null,null, Double.toString(PTT_Cali2), null );
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                            }
-                        });
+                    try {
+                        SocketInputStream = BTSocket.getInputStream();
+                        SocketOutputStream = BTSocket.getOutputStream();
+                        System.out.println("Entre al try");
+                    } catch (IOException e) {
+                        Log.e("Bluetooth", "Error al crear el socket Bluetooth", e);
                     }
-                });
-                // Inicia el hilo secundario
-                dataThread2.start();
+
+                    Thread dataThread2 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //InputStream socketInputStream = SocketInputStream; //Me parece que puedo borrar esta declaración
+                            DataInputStream dataInputStream = new DataInputStream(SocketInputStream);
+                            System.out.println("Estoy en el thread");
+                            //BufferedReader reader = new BufferedReader(new InputStreamReader(SocketInputStream));
+                            //Manda el caracter "1" a Arduino
+                            String signal = "1"; // La señal que desea enviar
+                            try {
+                                SocketOutputStream.write(signal.getBytes());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            while (true) { //Esto tiene que correr 120 veces para llenar 1 minuto xq de arduino vienen 100 datos por sensor
+                                try {
+                                    byte highByte = dataInputStream.readByte();
+                                    if (count == 0 && highByte == 0) {
+                                        highByte = dataInputStream.readByte();
+                                    }
+                                    byte lowByte = dataInputStream.readByte();
+                                    //byte middleByte = dataInputStream.readByte();
+
+                                    //| ((lowByte & 0xFF) << 16);
+                                    int valorRecibido = (highByte & 0xFF) | ((lowByte & 0xFF) << 8);
+                                    if ((lowByte & 0x80) != 0) {
+                                        valorRecibido |= 0xFFFF0000; // Establecer bits adicionales a 1 para valores negativos
+                                    }
+
+                                    //System.out.println(" HighByte: "+highByte+"LowByte: "+lowByte);
+
+                                    //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
+                                    //System.out.println(valorRecibido);
+                                    datosArray.add(valorRecibido);
+
+                                    count++;
+
+                                    if (count == 18000) { //se toma medio segundo de data
+                                        String signal2 = "0"; // La señal que desea enviar
+                                        try {
+                                            SocketOutputStream.write(signal2.getBytes());//se le pide al arduino que deje de enviar datos
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        System.out.println("YA ESTA");
+                                        count = 0;
+                                        break;
+                                    }
+
+                                    // Muestra en TextView
+                                } catch (IOException e) {
+                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
+                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            //ECG = splitArray(datosArray, 0, 12000);
+                            //SCG = splitArray(datosArray, 1, 12000);
+                            //PPG = splitArray(datosArray, 2, 12000);
+                            for (Integer valor : datosArray) {
+                                // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
+                                if (valor > -1000 && valor < 1000) {
+                                    //System.out.println(valor);
+                                    SCG.add(valor);
+                                } else if (round((float) valor / 10000) == 2) {
+                                    ECG.add(valor - 20000);
+                                    //System.out.println(valor);
+                                } else if (valor > -100000 && valor < -1000) {
+                                    PPG.add(valor * -1);
+                                    //System.out.println(valor);
+                                }
+                            }
+
+                            /*
+                            if (checkPermission()) {
+                                CreateCSV(ECG);
+                                CreateCSV(PPG);
+                                CreateCSV(SCG);
+                            } else {
+                                requestPermission();
+                                CreateCSV(ECG);
+                                CreateCSV(PPG);
+                                CreateCSV(SCG);
+                            }
+
+                             */
+
+                            try {
+                                PTT_Cali2 = PTT.CalcularPTT(ECG, PPG, SCG);
+                                System.out.println("PTT Cali 2: " + PTT_Cali2);
+                                String valorSistolica2 = sistolica2.getText().toString();
+
+                                if (valorSistolica2 != null && !valorSistolica2.isEmpty()) {
+                                    GuardarInfo(null, null, null, null, null, valorSistolica2, null, null, diastolica2.getText().toString(), null, null, Double.toString(PTT_Cali2), null);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                    // Inicia el hilo secundario
+                    dataThread2.start();
+                } else{
+                    Toast.makeText(getApplicationContext(), "El módulo Bluetooth no está conectado", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         cali3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setCancelable(false);
-                builder.setView(R.layout.midiendo_layout);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                if (BTSocket != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setCancelable(false);
+                    builder.setView(R.layout.midiendo_layout);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                try {
-                    SocketInputStream = BTSocket.getInputStream();
-                    SocketOutputStream = BTSocket.getOutputStream();
-                    System.out.println("Entre al try");
-                } catch (IOException e) {
-                    Log.e("Bluetooth", "Error al crear el socket Bluetooth", e);
-                }
-
-                Thread dataThread3 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //InputStream socketInputStream = SocketInputStream; //Me parece que puedo borrar esta declaración
-                        DataInputStream dataInputStream = new DataInputStream(SocketInputStream);
-                        System.out.println("Estoy en el thread");
-                        //BufferedReader reader = new BufferedReader(new InputStreamReader(SocketInputStream));
-                        //Manda el caracter "1" a Arduino
-                        String signal = "1"; // La señal que desea enviar
-                        try {
-                            SocketOutputStream.write(signal.getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        while (true) { //Esto tiene que correr 120 veces para llenar 1 minuto xq de arduino vienen 100 datos por sensor
-                            try {
-                                byte highByte = dataInputStream.readByte();
-                                if (count == 0 && highByte == 0) {
-                                    highByte = dataInputStream.readByte();
-                                }
-                                byte lowByte = dataInputStream.readByte();
-                                //byte middleByte = dataInputStream.readByte();
-
-                                //| ((lowByte & 0xFF) << 16);
-                                int valorRecibido = (highByte & 0xFF) | ((lowByte & 0xFF) << 8);
-                                if ((lowByte & 0x80) != 0) {
-                                    valorRecibido |= 0xFFFF0000; // Establecer bits adicionales a 1 para valores negativos
-                                }
-
-                                //System.out.println(" HighByte: "+highByte+"LowByte: "+lowByte);
-
-                                //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
-                                //System.out.println(valorRecibido);
-                                datosArray.add(valorRecibido);
-
-                                count++;
-
-                                if (count == 18000) { //se toma medio segundo de data
-                                    String signal2 = "0"; // La señal que desea enviar
-                                    try {
-                                        SocketOutputStream.write(signal2.getBytes());//se le pide al arduino que deje de enviar datos
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    System.out.println("YA ESTA");
-                                    count = 0;
-                                    break;
-                                }
-
-                            } catch (IOException e) {
-                                // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        //ECG = splitArray(datosArray, 0, 12000);
-                        //SCG = splitArray(datosArray, 1, 12000);
-                        //PPG = splitArray(datosArray, 2, 12000);
-                        for (Integer valor : datosArray) {
-                            // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
-                            if (valor > -1000 && valor < 1000) {
-                                //System.out.println(valor);
-                                SCG.add(valor);
-                            } else if (round((float) valor / 10000) == 2) {
-                                ECG.add(valor - 20000);
-                                //System.out.println(valor);
-                            } else if (valor > -100000 && valor < -1000) {
-                                PPG.add(valor * -1);
-                                //System.out.println(valor);
-                            }
-                        }
-
-                        /*
-                        if (checkPermission()) {
-                            CreateCSV(ECG);
-                            CreateCSV(PPG);
-                            CreateCSV(SCG);
-                        } else {
-                            requestPermission();
-                            CreateCSV(ECG);
-                            CreateCSV(PPG);
-                            CreateCSV(SCG);
-                        }
-
-                         */
-
-                        try {
-                            PTT_Cali3 = PTT.CalcularPTT(ECG, PPG, SCG);
-                            System.out.println("PTT Cali 3: " + PTT_Cali3);
-                            String valorSistolica3 = sistolica3.getText().toString();
-
-                            if (valorSistolica3 != null && !valorSistolica3.isEmpty()) {
-                                GuardarInfo(null, null, null, null, null, null, valorSistolica3, null, null, diastolica3.getText().toString(),null, null, Double.toString(PTT_Cali3) );
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        // Muestra en TextView
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                            }
-                        });
+                    try {
+                        SocketInputStream = BTSocket.getInputStream();
+                        SocketOutputStream = BTSocket.getOutputStream();
+                        System.out.println("Entre al try");
+                    } catch (IOException e) {
+                        Log.e("Bluetooth", "Error al crear el socket Bluetooth", e);
                     }
-                });
-                // Inicia el hilo secundario
-                dataThread3.start();
+
+                    Thread dataThread3 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //InputStream socketInputStream = SocketInputStream; //Me parece que puedo borrar esta declaración
+                            DataInputStream dataInputStream = new DataInputStream(SocketInputStream);
+                            System.out.println("Estoy en el thread");
+                            //BufferedReader reader = new BufferedReader(new InputStreamReader(SocketInputStream));
+                            //Manda el caracter "1" a Arduino
+                            String signal = "1"; // La señal que desea enviar
+                            try {
+                                SocketOutputStream.write(signal.getBytes());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            while (true) { //Esto tiene que correr 120 veces para llenar 1 minuto xq de arduino vienen 100 datos por sensor
+                                try {
+                                    byte highByte = dataInputStream.readByte();
+                                    if (count == 0 && highByte == 0) {
+                                        highByte = dataInputStream.readByte();
+                                    }
+                                    byte lowByte = dataInputStream.readByte();
+                                    //byte middleByte = dataInputStream.readByte();
+
+                                    //| ((lowByte & 0xFF) << 16);
+                                    int valorRecibido = (highByte & 0xFF) | ((lowByte & 0xFF) << 8);
+                                    if ((lowByte & 0x80) != 0) {
+                                        valorRecibido |= 0xFFFF0000; // Establecer bits adicionales a 1 para valores negativos
+                                    }
+
+                                    //System.out.println(" HighByte: "+highByte+"LowByte: "+lowByte);
+
+                                    //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
+                                    //System.out.println(valorRecibido);
+                                    datosArray.add(valorRecibido);
+
+                                    count++;
+
+                                    if (count == 18000) { //se toma medio segundo de data
+                                        String signal2 = "0"; // La señal que desea enviar
+                                        try {
+                                            SocketOutputStream.write(signal2.getBytes());//se le pide al arduino que deje de enviar datos
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        System.out.println("YA ESTA");
+                                        count = 0;
+                                        break;
+                                    }
+
+                                } catch (IOException e) {
+                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
+                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            //ECG = splitArray(datosArray, 0, 12000);
+                            //SCG = splitArray(datosArray, 1, 12000);
+                            //PPG = splitArray(datosArray, 2, 12000);
+                            for (Integer valor : datosArray) {
+                                // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
+                                if (valor > -1000 && valor < 1000) {
+                                    //System.out.println(valor);
+                                    SCG.add(valor);
+                                } else if (round((float) valor / 10000) == 2) {
+                                    ECG.add(valor - 20000);
+                                    //System.out.println(valor);
+                                } else if (valor > -100000 && valor < -1000) {
+                                    PPG.add(valor * -1);
+                                    //System.out.println(valor);
+                                }
+                            }
+
+                            /*
+                            if (checkPermission()) {
+                                CreateCSV(ECG);
+                                CreateCSV(PPG);
+                                CreateCSV(SCG);
+                            } else {
+                                requestPermission();
+                                CreateCSV(ECG);
+                                CreateCSV(PPG);
+                                CreateCSV(SCG);
+                            }
+
+                             */
+
+                            try {
+                                PTT_Cali3 = PTT.CalcularPTT(ECG, PPG, SCG);
+                                System.out.println("PTT Cali 3: " + PTT_Cali3);
+                                String valorSistolica3 = sistolica3.getText().toString();
+
+                                if (valorSistolica3 != null && !valorSistolica3.isEmpty()) {
+                                    GuardarInfo(null, null, null, null, null, null, valorSistolica3, null, null, diastolica3.getText().toString(), null, null, Double.toString(PTT_Cali3));
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Escriba los valores de presión primero", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            // Muestra en TextView
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                    // Inicia el hilo secundario
+                    dataThread3.start();
+                } else{
+                    Toast.makeText(getApplicationContext(), "El módulo Bluetooth no está conectado", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
