@@ -62,11 +62,18 @@ public class RegisterActivity extends AppCompatActivity {
     EditText email, password, confirm_password, nombre, apellido, user_username, edad, DNI, obra_social, peso;
     Button registrarse;
     String photoUrl;
+    private Uri uri;
+    private String resourceName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        resourceName = "logo_h_round"; // Cambia esto por el nombre de tu recurso sin extensión
+
+        // Construye la Uri utilizando el esquema android.resource y el nombre del recurso
+        uri = Uri.parse("android.resource://" + getPackageName() + "/drawable/" + resourceName);
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -104,13 +111,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // Supongamos que tienes el ID del recurso drawable
-    private int photo_H_default = R.drawable.logo_h_round;
+    //private int photo_H_default = R.drawable.logo_h_round;
 
     // Convierte el ID del recurso drawable a un URI
-    private Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-            "://" + getResources().getResourcePackageName(photo_H_default)
-            + '/' + getResources().getResourceTypeName(photo_H_default)
-            + '/' + getResources().getResourceEntryName(photo_H_default));
+//    private Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+//            "://" + getResources().getResourcePackageName(photo_H_default)
+//            + '/' + getResources().getResourceTypeName(photo_H_default)
+//            + '/' + getResources().getResourceEntryName(photo_H_default));
+
+    // Obtén el nombre del recurso (sin extensión) que está en res/drawable
+
+
+// Ahora puedes utilizar la Uri en tu aplicación, por ejemplo, para establecer una imagen en un ImageView
 
     // Ahora, `imageUri` contiene el URI del drawable
 
@@ -147,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 obra_social.getText().toString(),
                                                 peso.getText().toString(),
                                                 edad.getText().toString(),
-                                                imageUri.toString(),
+                                                uri.toString(),
                                                 email.getText().toString().trim(),
                                                 "No especificado",
                                                 "No especificado",
