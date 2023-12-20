@@ -64,7 +64,7 @@
         </string>
     <string name="ayuda2b">
         Para el electrocardiograma hay 3 electrodos, un electrodo va en el hombro derecho con el cable Rojo, un electrodo en el hombro izquierdo con el cable Amarillo y un electrodo con el cable verde sobre el lado izquierdo del abdomen.
-        \n\nEn la parte posterior del dispositivo se palpa una superficie dura que corresponde al acelerometro. Es importante que este sensor se encuentre sobre la parte central del esternón. Ajustá la altura hasta donde sea necesario.
+        \n\nEn la parte posterior del dispositivo se podrá ver una X sobre una superficie dura que corresponde al acelerometro. Es importante que la X se encuentre apoyada sobre la parte central del esternón. Ajustá la altura hasta donde sea necesario.
         \n\nEl sensor que se ve a simple vista es el PPG. Tenés que revisar que la luz roja esté encendida, y apoyar tu dedo sobre esta, sin presionar con fuerza.
         \n\nCon respecto al tensiómetro idealmente lo utilizará un médico. Pero, en caso de estar solx, colocate el brazalete 2 dedos por encima del pliege del codo y al cerrarlo te tiene que apretar el biceps sin pellizcarte la piel.
     </string>

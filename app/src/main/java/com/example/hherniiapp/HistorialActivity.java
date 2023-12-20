@@ -392,7 +392,7 @@ public class HistorialActivity extends AppCompatActivity {
         canvas.drawText("Aclaraciones:", 100, 1100 , subtitulo);
         canvas.drawText("Los valores se muestran en orden del más reciente al más antiguo.", 100, 1150 , paint);
         canvas.drawText("Los valores que se muestran en rojo indican valores fuera de lo normal para un paciente", 100, 1200 , paint);
-        canvas.drawText("entre 20 y 60 años en reposo.", 100, 1250 , paint);
+        canvas.drawText("entre 20 y 60 años en reposo (presión sistólica entre 80 y 120 y diastólica entre 60 y 80).", 100, 1250 , paint);
 
 
         //Le agrego el logo de Herni

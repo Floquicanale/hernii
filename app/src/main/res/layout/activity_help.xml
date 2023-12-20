@@ -127,7 +127,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ayuda2a"
                 app:layout_constraintBottom_toTopOf="@id/ayuda2b"
-                android:src="@drawable/sensores" />
+                android:src="@drawable/jm2"
+                android:scaleType="fitXY"/>
 
             <TextView
                 android:id="@+id/ayuda2b"

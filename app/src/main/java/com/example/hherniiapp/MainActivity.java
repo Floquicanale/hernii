@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                                     //System.out.println(valorRecibido);
                                     datosArray.add(valorRecibido);
 
-                                    count++;
+                                    count ++;
 
                                     if (count == 18000) { //se toma medio segundo de data
                                         String signal2 = "0"; // La señal que desea enviar
@@ -263,8 +263,8 @@ public class MainActivity extends AppCompatActivity {
                                     // Muestra en TextView
 
                                 } catch (IOException e) {
-                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                    enviarSenal1();
                                 }
                             }
                             //ECG = splitArray(datosArray, 0, 12000);
@@ -460,8 +460,7 @@ public class MainActivity extends AppCompatActivity {
                                     //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
                                     //System.out.println(valorRecibido);
                                     datosArray.add(valorRecibido);
-
-                                    count++;
+                                    count ++;
 
                                     if (count == 18000) { //se toma medio segundo de data
                                         String signal2 = "0"; // La señal que desea enviar
@@ -477,8 +476,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     // Muestra en TextView
                                 } catch (IOException e) {
-                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                    enviarSenal1();
                                 }
                             }
                             //ECG = splitArray(datosArray, 0, 12000);
@@ -597,8 +596,7 @@ public class MainActivity extends AppCompatActivity {
                                     //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
                                     //System.out.println(valorRecibido);
                                     datosArray.add(valorRecibido);
-
-                                    count++;
+                                    count ++;
 
                                     if (count == 18000) { //se toma medio segundo de data
                                         String signal2 = "0"; // La señal que desea enviar
@@ -614,8 +612,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     // Muestra en TextView
                                 } catch (IOException e) {
-                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                    enviarSenal1();
                                 }
                             }
                             //ECG = splitArray(datosArray, 0, 12000);
@@ -732,8 +730,7 @@ public class MainActivity extends AppCompatActivity {
                                     //short shortReceived = (short) ((highByte << 8) | (lowByte & 0xFF));
                                     //System.out.println(valorRecibido);
                                     datosArray.add(valorRecibido);
-
-                                    count++;
+                                    count ++;
 
                                     if (count == 18000) { //se toma medio segundo de data
                                         String signal2 = "0"; // La señal que desea enviar
@@ -748,13 +745,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                 } catch (IOException e) {
-                                    // Maneja las excepciones, por ejemplo, si la conexión se interrumpe
-                                    Toast.makeText(getApplicationContext(), "No se pudo transmitir", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                    enviarSenal1();
                                 }
                             }
-                            //ECG = splitArray(datosArray, 0, 12000);
-                            //SCG = splitArray(datosArray, 1, 12000);
-                            //PPG = splitArray(datosArray, 2, 12000);
+
                             for (Integer valor : datosArray) {
                                 // Los de ECG vienen con una marca, los de acelerometro son los unicos que pueden ser negativos, los de PPG estan entre esos valores
                                 if (valor > -1000 && valor < 1000) {
@@ -893,6 +888,16 @@ public class MainActivity extends AppCompatActivity {
         // Devuelve los coeficientes
         return new double[] { a, b };
 
+    }
+
+    private void enviarSenal1() {
+        // Lógica para enviar la señal "1" de vuelta a Arduino
+        try {
+            String signal = "1";
+            SocketOutputStream.write(signal.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     /*
     //CONVERSIONES DE TIPO DE DATO.
